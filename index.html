@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .productContainer {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .productLink {
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #3498db;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .mainImage {
+            max-width: 30%;  /* Adjusted max-width */
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .listImagesContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .listImage {
+            max-width: 50px;
+            height: auto;
+            margin-right: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div id="productsContainer"></div>
+
+<script>
+    // Fetch the JSON content from the file
+    fetch('products.json')
+        .then(response => response.json())
+        .then(products => {
+            var productsContainer = document.getElementById('productsContainer');
+
+            products.forEach(product => {
+                // Create a container for each product
+                var productContainer = document.createElement('div');
+                productContainer.className = 'productContainer';
+
+                // Create a link element
+                var productLink = document.createElement('a');
+                productLink.href = product.product_url;
+                productLink.textContent = 'Product Details';
+                productLink.className = 'productLink';
+
+                // Create an image element for the main image
+                var mainImage = document.createElement('img');
+                mainImage.src = product.main_image;
+                mainImage.alt = 'Main Product Image';
+                mainImage.className = 'mainImage';
+
+                // Create image elements for the list images
+                var listImagesContainer = document.createElement('div');
+                listImagesContainer.className = 'listImagesContainer';
+
+                product.list_image.forEach(imageUrl => {
+                    var image = document.createElement('img');
+                    image.src = imageUrl;
+                    image.className = 'listImage';
+                    image.addEventListener('click', function () {
+                        mainImage.src = imageUrl;
+                    });
+                    listImagesContainer.appendChild(image);
+                });
+
+                // Append elements to the product container
+                productContainer.appendChild(productLink);
+                productContainer.appendChild(mainImage);
+                productContainer.appendChild(listImagesContainer);
+
+                // Append the product container to the main container
+                productsContainer.appendChild(productContainer);
+            });
+        })
+        .catch(error => console.error('Error fetching JSON:', error));
+</script>
+
+</body>
+</html>
